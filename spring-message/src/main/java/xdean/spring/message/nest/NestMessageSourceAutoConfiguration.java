@@ -2,6 +2,7 @@ package xdean.spring.message.nest;
 
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.SearchStrategy;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
@@ -13,13 +14,15 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 
+import xdean.spring.auto.AutoSpringFactories;
 import xdean.spring.message.nest.NestMessageSourceAutoConfiguration.ResourceBundleCondition;
 
 @Configuration
+@Conditional(ResourceBundleCondition.class)
 @ConditionalOnMissingBean(value = MessageSource.class, search = SearchStrategy.CURRENT)
 @AutoConfigureBefore(MessageSourceAutoConfiguration.class)
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
-@Conditional(ResourceBundleCondition.class)
+@AutoSpringFactories(EnableAutoConfiguration.class)
 @EnableConfigurationProperties
 public class NestMessageSourceAutoConfiguration extends MessageSourceAutoConfiguration {
   @Bean
