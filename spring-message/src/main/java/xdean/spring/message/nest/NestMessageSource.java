@@ -1,4 +1,4 @@
-package xdean.wechat.common.spring.message;
+package xdean.spring.message.nest;
 
 import static xdean.jex.extra.IllegalDefineException.assertTrue;
 import static xdean.jex.extra.IllegalDefineException.assertFalse;
