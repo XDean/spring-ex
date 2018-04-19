@@ -12,11 +12,48 @@
 	<packaging>pom</packaging>
 	<name>Spring Extension</name>
 	<description>Spring Extension</description>
-	<url>${repository.url}</url>
+	<url>https://github.com/XDean/spring-ex</url>
+
+	<modules>
+		<module>spring-message</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-parent</artifactId>
+				<version>2.0.0.RELEASE</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>com.github.XDean</groupId>
+				<artifactId>Java-EX</artifactId>
+				<version>0.1.1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.XDean</groupId>
+			<artifactId>Java-EX</artifactId>
+		</dependency>
+	</dependencies>
 
 	<scm>
-		<connection>scm:${scm.url}</connection>
-		<developerConnection>scm:${scm.url}</developerConnection>
-		<url>${scm.url}</url>
+		<connection>scm:git@github.com:XDean/spring-ex.git</connection>
+		<developerConnection>scm:git@github.com:XDean/spring-ex.git</developerConnection>
+		<url>git@github.com:XDean/spring-ex.git</url>
 	</scm>
 </project>
