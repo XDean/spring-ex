@@ -20,15 +20,21 @@ import lombok.RequiredArgsConstructor;
 
 public class NestMessageSource implements MessageSource {
   private final MessageSource delegate;
-  private String prefix = "$(";
-  private String suffix = ")";
-  private String splitor = ",";
-  private String argPrefix = "$";
-  private String escaper = "\\";
-  private String quoter = "\"";
+  private final NestMessageSourceProperties prop;
+  // private String prefix = "$(";
+  // private String suffix = ")";
+  // private String splitor = ",";
+  // private String argPrefix = "$";
+  // private String escaper = "\\";
+  // private String quoter = "\"";
 
   public NestMessageSource(MessageSource delegate) {
+    this(delegate, new NestMessageSourceProperties());
+  }
+
+  public NestMessageSource(MessageSource delegate, NestMessageSourceProperties p) {
     this.delegate = delegate;
+    this.prop = p;
   }
 
   @Override
@@ -52,8 +58,8 @@ public class NestMessageSource implements MessageSource {
 
   @RequiredArgsConstructor
   private class Resolver {
-    private final Token prefixToken = new Token(prefix);
-    private final Token splitorToken = new Token(splitor);
+    private final Token prefixToken = new Token(prop.prefix);
+    private final Token splitorToken = new Token(prop.splitor);
     private final String str;
     private final Object[] args;
     private final Locale locale;
@@ -66,19 +72,19 @@ public class NestMessageSource implements MessageSource {
     public String parse() {
       values.push(new Token());
       while (offset < str.length()) {
-        if (str.startsWith(escaper, offset)) {
-          offset(escaper);
+        if (str.startsWith(prop.escaper, offset)) {
+          offset(prop.escaper);
           checkOffset("Can't end with escaper");
           append();
         } else if (inQuote) {
-          if (str.startsWith(quoter, offset)) {
-            offset(quoter);
+          if (str.startsWith(prop.quoter, offset)) {
+            offset(prop.quoter);
             inQuote = false;
           } else {
             append();
           }
         } else if (inArg) {
-          if (str.startsWith(suffix, offset) || str.startsWith(splitor, offset)) {
+          if (str.startsWith(prop.suffix, offset) || str.startsWith(prop.splitor, offset)) {
             inArg = false;
             Token argToken = values.pop();
             String s = argToken.sb.toString().trim();
@@ -87,33 +93,33 @@ public class NestMessageSource implements MessageSource {
               assertTrue(args.length > index, formatError("Arguement " + index + " not exist"));
               values.push(new Token(args[index]));
             } catch (NumberFormatException e) {
-              assertTrue(false, formatError("ArgPrefix " + argPrefix + " must only follow a integer"));
+              assertTrue(false, formatError("ArgPrefix " + prop.argPrefix + " must only follow a integer"));
             }
           } else {
             append();
           }
-        } else if (str.startsWith(prefix, offset)) {
+        } else if (str.startsWith(prop.prefix, offset)) {
           values.push(prefixToken);
           values.push(splitorToken);
           end();
-          offset(prefix);
+          offset(prop.prefix);
           left++;
         } else if (left > 0) {
-          if (str.startsWith(suffix, offset)) {
-            offset(suffix);
+          if (str.startsWith(prop.suffix, offset)) {
+            offset(prop.suffix);
             left--;
             resolveExp();
             end();
-          } else if (str.startsWith(quoter, offset)) {
-            offset(quoter);
+          } else if (str.startsWith(prop.quoter, offset)) {
+            offset(prop.quoter);
             inQuote = true;
-          } else if (str.startsWith(splitor, offset)) {
-            offset(splitor);
+          } else if (str.startsWith(prop.splitor, offset)) {
+            offset(prop.splitor);
             resolveArg();
             values.push(splitorToken);
             end();
-          } else if (str.startsWith(argPrefix, offset) && values.peek().toString().isEmpty()) {
-            offset(argPrefix);
+          } else if (str.startsWith(prop.argPrefix, offset) && values.peek().toString().isEmpty()) {
+            offset(prop.argPrefix);
             inArg = true;
           } else {
             append();
@@ -165,7 +171,7 @@ public class NestMessageSource implements MessageSource {
         }
         params.push(pop);
       }
-      assertFalse(params.isEmpty(), formatError("Can't define empty var " + prefix + suffix));
+      assertFalse(params.isEmpty(), formatError("Can't define empty var " + prop.prefix + prop.suffix));
       Token codeToken = params.pop();
       assertTrue(codeToken.arg == null, formatError("First parameter should be code"));
       String code = codeToken.sb.toString();
