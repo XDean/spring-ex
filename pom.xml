@@ -16,6 +16,7 @@
 
 	<modules>
 		<module>spring-message</module>
+		<module>spring-common</module>
 	</modules>
 
 	<dependencyManagement>
