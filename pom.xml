@@ -15,7 +15,6 @@
 	<url>https://github.com/XDean/spring-ex</url>
 
 	<modules>
-		<module>spring-message</module>
 		<module>spring-common</module>
 		<module>auto-spring-factories</module>
 	</modules>
