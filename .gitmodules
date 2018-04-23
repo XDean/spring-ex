@@ -1,0 +1,6 @@
+[submodule "auto-spring-factories"]
+    path = auto-spring-factories
+    url = https://github.com/XDean/auto-spring-factories
+[submodule "nest-message-spring-boot"]
+    path = nest-message-spring-boot
+    url = https://github.com/XDean/nest-message-spring-boot
