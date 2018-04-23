@@ -16,7 +16,6 @@
 
 	<modules>
 		<module>spring-common</module>
-		<module>auto-spring-factories</module>
 	</modules>
 
 	<dependencyManagement>
